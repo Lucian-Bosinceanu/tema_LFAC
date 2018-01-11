@@ -1,0 +1,49 @@
+-declaratii de variabile, constante, functii si definitii de functii
+
+variabila: cred ca int|float|bool|string ID?
+constanta: mereu int|float|bool|string ID = NR?
+declaratie funtie: o functie TIP "NUME"(LISTA_PARAM)?
+definitie functie:
+o functie TIP "NUME"(LISTA_PARAM):
+<
+CHESTII
+>
+
+-user defined data
+
+un struct "NUME":
+<
+variabila|constanta
+>
+"NUME" ID?
+ID ~> variabila|constanta
+
+-array
+
+cred ca int|float|bool|string ID [NR]?
+ID[NR]?
+
+-control statements si assignment
+
+daca(EXPRESIE_BOOLEANA):
+<
+CHESTII
+>
+altfel:
+<
+CHESTII
+>
+
+cat timp(EXPRESIE_BOOLEANA):
+<
+CHESTII
+>
+
+pentru(variabile? EXPRESIE_BOOLEANA? EXPRESII):
+<
+CHESTII
+>
+
+variabila = constanta|functie|expresie|numar|variabila
+
+-
