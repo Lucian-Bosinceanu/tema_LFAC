@@ -1,0 +1,5 @@
+int @a;
+
+begin_progr
+@a := 5;
+end_progr
