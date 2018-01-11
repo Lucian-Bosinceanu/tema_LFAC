@@ -4,7 +4,7 @@ extern FILE* yyin;
 extern char* yytext;
 extern int yylineno;
 %}
-%token ID TIP BGIN END ASSIGN NR 
+%token ID TIP BEGIN END ASSIGN NR 
 %start progr
 %%
 progr: declaratii bloc {printf("program corect sintactic\n");}
@@ -25,7 +25,7 @@ param : TIP ID
       ; 
       
 /* bloc */
-bloc : BGIN list END  
+bloc : BEGIN list END  
      ;
      
 /* lista instructiuni */

@@ -106,7 +106,7 @@ extern int yydebug;
   {
     ID = 258,
     TIP = 259,
-    BGIN = 260,
+    BEGIN = 260,
     END = 261,
     ASSIGN = 262,
     NR = 263
@@ -115,7 +115,7 @@ extern int yydebug;
 /* Tokens.  */
 #define ID 258
 #define TIP 259
-#define BGIN 260
+#define BEGIN 260
 #define END 261
 #define ASSIGN 262
 #define NR 263
@@ -444,7 +444,7 @@ static const yytype_uint8 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "ID", "TIP", "BGIN", "END", "ASSIGN",
+  "$end", "error", "$undefined", "ID", "TIP", "BEGIN", "END", "ASSIGN",
   "NR", "';'", "'('", "')'", "','", "$accept", "progr", "declaratii",
   "declaratie", "lista_param", "param", "bloc", "list", "statement",
   "lista_apel", YY_NULLPTR

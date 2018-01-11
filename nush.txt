@@ -1,5 +1,41 @@
-int @a;
+cred ca int abc?
+cred ca bool ceva =? adivarat?
+cred ca float date[45]?
+o functie string numeF (cred ca int A, cred ca float B) <
 
-begin_progr
-@a := 5;
-end_progr
+    cred ca string cineva = "ceva ceva"?
+    
+    //? ???? este functia de afisare
+    ????(A+B)?
+    intoarce cineva?
+>
+
+aa...
+
+    cred ca int i,j?
+
+    i =? 1?
+    j =? 10?
+
+    cat timp ( i !?= j )
+        <
+            i+?+?
+            j-?-?
+        >     
+
+    un struct _numeStruct: <
+    
+        cred ca string nume?
+        cred ca int varsta?
+        cred ca float inaltime35?
+    >
+    _numeStruct elev;  
+
+    elev ~> nume =? numeF(30,40.5)?
+    elev ~> varsta =? i?
+
+    date[j] =? 10?
+
+    ????(elev ~> varsta)?
+
+...da

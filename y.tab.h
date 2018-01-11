@@ -47,7 +47,7 @@ extern int yydebug;
   {
     ID = 258,
     TIP = 259,
-    BGIN = 260,
+    BEGIN = 260,
     END = 261,
     ASSIGN = 262,
     NR = 263
@@ -56,7 +56,7 @@ extern int yydebug;
 /* Tokens.  */
 #define ID 258
 #define TIP 259
-#define BGIN 260
+#define BEGIN 260
 #define END 261
 #define ASSIGN 262
 #define NR 263
