@@ -6,10 +6,15 @@
 %%
  /*variable declarations, constant declarations (different kind of constants) , function declarations and definitions*/
  
-"cred ca "("int"|"float"|"bool"|"string") {return TIP_VAR;}
-"mereu "("int"|"float"|"bool"|"string") {return TIP_CONST;}
-"o functie "("int"|"float"|"bool"|"string"|"void") {return TIP_FUNCTIE;}
-[a-zA-Z][_a-zA-Z0-9]* {return ID;} 
+"cred ca "("int"|"float") {return TIP_VAR;}
+"cred ca bool" {return TIP_VAR_BOOL;}
+"mereu "("int"|"float") {return TIP_CONST;}
+"mereu bool" {return TIP_CONST_BOOL;}
+"o functie "("int"|"float"|"bool"|"string") {return TIP_FUNCTIE;}
+"o functie void" {return TIP_FUNCTIE_VOID;}
+[a-zA-Z][_a-zA-Z0-9]* {return ID;}
+[A-Z]+ {return CID;}
+"intoarce" {return RETURN;}
 
  /*user defined data types (similar to classes in object orientated languages, but with your ownsyntax); provide specific syntax for working with these types*/
 
@@ -44,6 +49,8 @@ _[a-zA-Z][_a-zA-Z0-9]* {return NUME_STRUCT;}
 
  /*operations with string types*/
 
+"cred ca string" {return TIP_VAR_STRING;}
+"mereu string" {return TIP_CONST_STRING;}
 \".*\" {return STRING;}
 
  /*function calls which can have as parameters: expressions, other function calls, identifiers, constants,etc. ->> YAC*/

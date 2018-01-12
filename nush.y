@@ -4,24 +4,48 @@ extern FILE* yyin;
 extern char* yytext;
 extern int yylineno;
 %}
-%token ID TIP BEGIN END ASSIGN NR 
-%start progr
-%%
-progr: declaratii bloc {printf("program corect sintactic\n");}
-     ;
 
-declaratii :  declaratie ';'
-	   | declaratii declaratie ';'
-	   ;
-declaratie : TIP ID 
-           | TIP ID '(' lista_param ')'
-           | TIP ID '(' ')'
-           ;
+%token ID TIP_VAR TIP_CONST TIP_FUNCTIE RETURN
+       NUME_STRUCT TIP_STRUCT REF
+       IF ELSE WHILE FOR
+       NR BOOL ASSIGN AND OR NOT INC DEC COMP
+       STRING
+       PRINT COMMENT BEGIN END
+%start progr
+
+%%
+progr : declaratii bloc {printf("program corect sintactic\n");}
+      ;
+
+declaratii  : declaratie '?'
+	      | declaratii declaratie '?'
+	      ;
+
+declaratie  : TIP_VAR ID
+            | TIP_VAR ID '[' NR ']'
+            | TIP_VAR ID ASSIGN NR
+            | TIP_VAR_BOOL ID
+            | TIP_VAR_BOOL '[' NR ']'
+            | TIP_VAR_BOOL ID ASSIGN BOOL
+            | TIP_CONST CID NR
+            | TIP_CONST_BOOL CID BOOL
+            | TIP_VAR_STRING ID STRING
+            | TIP_CONST_STRING CID STRING
+            | TIP_FUNCTIE ID '(' lista_param ')'
+            | TIP_FUNCTIE ID '(' ')'
+            | TIP_FUNCTIE ID '(' lista_param ')' definitie
+            | TIP_FUNCTIE ID '(' ')' definitie
+            ;
+
+definitie   : bloc
+
 lista_param : param
-            | lista_param ','  param 
+            | lista_param ',' param 
             ;
             
-param : TIP ID
+param : TIP_VAR ID
+      | TIP_FUNCTIE ID '(' lista_param ')'
+      | TIP_FUNCTIE ID '(' ')'
       ; 
       
 /* bloc */
