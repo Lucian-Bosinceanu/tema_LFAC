@@ -1,0 +1,2265 @@
+Grammar
+
+    0 $accept: progr $end
+
+    1 progr: declaratii main
+
+    2 declaratii: declaratie '?'
+    3           | declaratii declaratie '?'
+    4           | COMMENT
+
+    5 declaratie: non_funct_decl
+    6           | funct_decl
+    7           | struct_decl
+
+    8 non_funct_decl: var_decl
+    9               | const_decl
+
+   10 non_funct_decl_list: non_funct_decl '?'
+   11                    | non_funct_decl_list non_funct_decl '?'
+
+   12 var_decl: TIP_VAR ID
+   13         | TIP_VAR ID '[' NR ']'
+   14         | TIP_VAR ID ASSIGN NR
+   15         | TIP_VAR_BOOL ID
+   16         | TIP_VAR_BOOL ID '[' NR ']'
+   17         | TIP_VAR_BOOL ID ASSIGN BOOL
+   18         | TIP_VAR_STRING ID ASSIGN STRING
+   19         | NUME_STRUCT ID
+   20         | NUME_STRUCT ID '[' NR ']'
+
+   21 const_decl: TIP_CONST CID NR
+   22           | TIP_CONST_BOOL CID BOOL
+   23           | TIP_CONST_STRING CID STRING
+
+   24 funct_decl: TIP_FUNCTIE ID '(' lista_param ')' bloc
+   25           | TIP_FUNCTIE ID '(' ')' bloc
+   26           | TIP_FUNCTIE ID '(' lista_param ')'
+   27           | TIP_FUNCTIE ID '(' ')'
+
+   28 struct_decl: STRUCT NUME_STRUCT '<' non_funct_decl_list '>'
+
+   29 struct_member_selection: NUME_STRUCT REF ID
+   30                        | NUME_STRUCT REF CID
+
+   31 lista_param: param
+   32            | lista_param ',' param
+
+   33 param: TIP_VAR ID
+   34      | TIP_VAR_BOOL ID
+   35      | TIP_VAR_STRING ID
+
+   36 main: BGIN list END
+
+   37 bloc: '<' list '>'
+   38     | '<' '>'
+
+   39 list: statement '?'
+   40     | control
+   41     | list statement '?'
+   42     | list control
+
+   43 statement: ID ASSIGN Aexp
+   44          | ID ASSIGN Bexp
+   45          | ID ASSIGN STRING
+   46          | declaratie
+   47          | PRINT '(' Aexp ')'
+   48          | COMMENT
+   49          | Aexp
+   50          | bloc
+   51          | apel_functie
+   52          | RETURN Aexp
+   53          | RETURN Bexp
+   54          | RETURN apel_functie
+
+   55 control: WHILE '(' Bexp ')' bloc
+   56        | IF '(' Bexp ')' bloc
+   57        | IF '(' Bexp ')' bloc ELSE bloc
+   58        | FOR '(' Bexp '?' Aexp ')' bloc
+
+   59 Aexp: NR
+   60     | '(' Aexp ')'
+   61     | ID
+   62     | CID
+   63     | struct_member_selection
+   64     | ID '[' Aexp ']'
+   65     | Aexp '+' Aexp
+   66     | Aexp '*' Aexp
+   67     | Aexp '-' Aexp
+   68     | Aexp '/' Aexp
+   69     | Aexp '%' Aexp
+   70     | INC ID
+   71     | ID INC
+   72     | DEC ID
+   73     | ID DEC
+
+   74 apel_functie: ID '(' lista_apel ')'
+
+   75 Bexp: BOOL
+   76     | Aexp COMP Aexp
+   77     | Aexp COMP Bexp
+   78     | Aexp AND Aexp
+   79     | Aexp OR Aexp
+   80     | Aexp AND Bexp
+   81     | Aexp OR Bexp
+   82     | NOT Bexp
+   83     | '(' Bexp ')'
+
+   84 lista_apel: apelabil
+   85           | lista_apel ',' apelabil
+
+   86 apelabil: NR
+   87         | BOOL
+   88         | STRING
+   89         | ID
+   90         | CID
+   91         | apel_functie
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'%' (37) 69
+'(' (40) 24 25 26 27 47 55 56 57 58 60 74 83
+')' (41) 24 25 26 27 47 55 56 57 58 60 74 83
+'*' (42) 66
+'+' (43) 65
+',' (44) 32 85
+'-' (45) 67
+'/' (47) 68
+'<' (60) 28 37 38
+'>' (62) 28 37 38
+'?' (63) 2 3 10 11 39 41 58
+'[' (91) 13 16 20 64
+']' (93) 13 16 20 64
+error (256)
+ID (258) 12 13 14 15 16 17 18 19 20 24 25 26 27 29 33 34 35 43 44 45
+    61 64 70 71 72 73 74 89
+CID (259) 21 22 23 30 62 90
+TIP_VAR (260) 12 13 14 33
+TIP_CONST (261) 21
+TIP_FUNCTIE (262) 24 25 26 27
+TIP_VAR_BOOL (263) 15 16 17 34
+TIP_VAR_STRING (264) 18 35
+TIP_CONST_BOOL (265) 22
+TIP_CONST_STRING (266) 23
+RETURN (267) 52 53 54
+NUME_STRUCT (268) 19 20 28 29 30
+STRUCT (269) 28
+REF (270) 29 30
+IF (271) 56 57
+WHILE (272) 55
+FOR (273) 58
+NR (274) 13 14 16 20 21 59 86
+BOOL (275) 17 22 75 87
+ASSIGN (276) 14 17 18 43 44 45
+AND (277) 78 80
+OR (278) 79 81
+NOT (279) 82
+INC (280) 70 71
+DEC (281) 72 73
+COMP (282) 76 77
+STRING (283) 18 23 45 88
+PRINT (284) 47
+COMMENT (285) 4 48
+BGIN (286) 36
+END (287) 36
+NO_ELSE (288)
+ELSE (289) 57
+
+
+Nonterminals, with rules where they appear
+
+$accept (48)
+    on left: 0
+progr (49)
+    on left: 1, on right: 0
+declaratii (50)
+    on left: 2 3 4, on right: 1 3
+declaratie (51)
+    on left: 5 6 7, on right: 2 3 46
+non_funct_decl (52)
+    on left: 8 9, on right: 5 10 11
+non_funct_decl_list (53)
+    on left: 10 11, on right: 11 28
+var_decl (54)
+    on left: 12 13 14 15 16 17 18 19 20, on right: 8
+const_decl (55)
+    on left: 21 22 23, on right: 9
+funct_decl (56)
+    on left: 24 25 26 27, on right: 6
+struct_decl (57)
+    on left: 28, on right: 7
+struct_member_selection (58)
+    on left: 29 30, on right: 63
+lista_param (59)
+    on left: 31 32, on right: 24 26 32
+param (60)
+    on left: 33 34 35, on right: 31 32
+main (61)
+    on left: 36, on right: 1
+bloc (62)
+    on left: 37 38, on right: 24 25 50 55 56 57 58
+list (63)
+    on left: 39 40 41 42, on right: 36 37 41 42
+statement (64)
+    on left: 43 44 45 46 47 48 49 50 51 52 53 54, on right: 39 41
+control (65)
+    on left: 55 56 57 58, on right: 40 42
+Aexp (66)
+    on left: 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73, on right:
+    43 47 49 52 58 60 64 65 66 67 68 69 76 77 78 79 80 81
+apel_functie (67)
+    on left: 74, on right: 51 54 91
+Bexp (68)
+    on left: 75 76 77 78 79 80 81 82 83, on right: 44 53 55 56 57 58
+    77 80 81 82 83
+lista_apel (69)
+    on left: 84 85, on right: 74 85
+apelabil (70)
+    on left: 86 87 88 89 90 91, on right: 84 85
+
+
+State 0
+
+    0 $accept: . progr $end
+
+    TIP_VAR           shift, and go to state 1
+    TIP_CONST         shift, and go to state 2
+    TIP_FUNCTIE       shift, and go to state 3
+    TIP_VAR_BOOL      shift, and go to state 4
+    TIP_VAR_STRING    shift, and go to state 5
+    TIP_CONST_BOOL    shift, and go to state 6
+    TIP_CONST_STRING  shift, and go to state 7
+    NUME_STRUCT       shift, and go to state 8
+    STRUCT            shift, and go to state 9
+    COMMENT           shift, and go to state 10
+
+    progr           go to state 11
+    declaratii      go to state 12
+    declaratie      go to state 13
+    non_funct_decl  go to state 14
+    var_decl        go to state 15
+    const_decl      go to state 16
+    funct_decl      go to state 17
+    struct_decl     go to state 18
+
+
+State 1
+
+   12 var_decl: TIP_VAR . ID
+   13         | TIP_VAR . ID '[' NR ']'
+   14         | TIP_VAR . ID ASSIGN NR
+
+    ID  shift, and go to state 19
+
+
+State 2
+
+   21 const_decl: TIP_CONST . CID NR
+
+    CID  shift, and go to state 20
+
+
+State 3
+
+   24 funct_decl: TIP_FUNCTIE . ID '(' lista_param ')' bloc
+   25           | TIP_FUNCTIE . ID '(' ')' bloc
+   26           | TIP_FUNCTIE . ID '(' lista_param ')'
+   27           | TIP_FUNCTIE . ID '(' ')'
+
+    ID  shift, and go to state 21
+
+
+State 4
+
+   15 var_decl: TIP_VAR_BOOL . ID
+   16         | TIP_VAR_BOOL . ID '[' NR ']'
+   17         | TIP_VAR_BOOL . ID ASSIGN BOOL
+
+    ID  shift, and go to state 22
+
+
+State 5
+
+   18 var_decl: TIP_VAR_STRING . ID ASSIGN STRING
+
+    ID  shift, and go to state 23
+
+
+State 6
+
+   22 const_decl: TIP_CONST_BOOL . CID BOOL
+
+    CID  shift, and go to state 24
+
+
+State 7
+
+   23 const_decl: TIP_CONST_STRING . CID STRING
+
+    CID  shift, and go to state 25
+
+
+State 8
+
+   19 var_decl: NUME_STRUCT . ID
+   20         | NUME_STRUCT . ID '[' NR ']'
+
+    ID  shift, and go to state 26
+
+
+State 9
+
+   28 struct_decl: STRUCT . NUME_STRUCT '<' non_funct_decl_list '>'
+
+    NUME_STRUCT  shift, and go to state 27
+
+
+State 10
+
+    4 declaratii: COMMENT .
+
+    $default  reduce using rule 4 (declaratii)
+
+
+State 11
+
+    0 $accept: progr . $end
+
+    $end  shift, and go to state 28
+
+
+State 12
+
+    1 progr: declaratii . main
+    3 declaratii: declaratii . declaratie '?'
+
+    TIP_VAR           shift, and go to state 1
+    TIP_CONST         shift, and go to state 2
+    TIP_FUNCTIE       shift, and go to state 3
+    TIP_VAR_BOOL      shift, and go to state 4
+    TIP_VAR_STRING    shift, and go to state 5
+    TIP_CONST_BOOL    shift, and go to state 6
+    TIP_CONST_STRING  shift, and go to state 7
+    NUME_STRUCT       shift, and go to state 8
+    STRUCT            shift, and go to state 9
+    BGIN              shift, and go to state 29
+
+    declaratie      go to state 30
+    non_funct_decl  go to state 14
+    var_decl        go to state 15
+    const_decl      go to state 16
+    funct_decl      go to state 17
+    struct_decl     go to state 18
+    main            go to state 31
+
+
+State 13
+
+    2 declaratii: declaratie . '?'
+
+    '?'  shift, and go to state 32
+
+
+State 14
+
+    5 declaratie: non_funct_decl .
+
+    $default  reduce using rule 5 (declaratie)
+
+
+State 15
+
+    8 non_funct_decl: var_decl .
+
+    $default  reduce using rule 8 (non_funct_decl)
+
+
+State 16
+
+    9 non_funct_decl: const_decl .
+
+    $default  reduce using rule 9 (non_funct_decl)
+
+
+State 17
+
+    6 declaratie: funct_decl .
+
+    $default  reduce using rule 6 (declaratie)
+
+
+State 18
+
+    7 declaratie: struct_decl .
+
+    $default  reduce using rule 7 (declaratie)
+
+
+State 19
+
+   12 var_decl: TIP_VAR ID .
+   13         | TIP_VAR ID . '[' NR ']'
+   14         | TIP_VAR ID . ASSIGN NR
+
+    ASSIGN  shift, and go to state 33
+    '['     shift, and go to state 34
+
+    $default  reduce using rule 12 (var_decl)
+
+
+State 20
+
+   21 const_decl: TIP_CONST CID . NR
+
+    NR  shift, and go to state 35
+
+
+State 21
+
+   24 funct_decl: TIP_FUNCTIE ID . '(' lista_param ')' bloc
+   25           | TIP_FUNCTIE ID . '(' ')' bloc
+   26           | TIP_FUNCTIE ID . '(' lista_param ')'
+   27           | TIP_FUNCTIE ID . '(' ')'
+
+    '('  shift, and go to state 36
+
+
+State 22
+
+   15 var_decl: TIP_VAR_BOOL ID .
+   16         | TIP_VAR_BOOL ID . '[' NR ']'
+   17         | TIP_VAR_BOOL ID . ASSIGN BOOL
+
+    ASSIGN  shift, and go to state 37
+    '['     shift, and go to state 38
+
+    $default  reduce using rule 15 (var_decl)
+
+
+State 23
+
+   18 var_decl: TIP_VAR_STRING ID . ASSIGN STRING
+
+    ASSIGN  shift, and go to state 39
+
+
+State 24
+
+   22 const_decl: TIP_CONST_BOOL CID . BOOL
+
+    BOOL  shift, and go to state 40
+
+
+State 25
+
+   23 const_decl: TIP_CONST_STRING CID . STRING
+
+    STRING  shift, and go to state 41
+
+
+State 26
+
+   19 var_decl: NUME_STRUCT ID .
+   20         | NUME_STRUCT ID . '[' NR ']'
+
+    '['  shift, and go to state 42
+
+    $default  reduce using rule 19 (var_decl)
+
+
+State 27
+
+   28 struct_decl: STRUCT NUME_STRUCT . '<' non_funct_decl_list '>'
+
+    '<'  shift, and go to state 43
+
+
+State 28
+
+    0 $accept: progr $end .
+
+    $default  accept
+
+
+State 29
+
+   36 main: BGIN . list END
+
+    ID                shift, and go to state 44
+    CID               shift, and go to state 45
+    TIP_VAR           shift, and go to state 1
+    TIP_CONST         shift, and go to state 2
+    TIP_FUNCTIE       shift, and go to state 3
+    TIP_VAR_BOOL      shift, and go to state 4
+    TIP_VAR_STRING    shift, and go to state 5
+    TIP_CONST_BOOL    shift, and go to state 6
+    TIP_CONST_STRING  shift, and go to state 7
+    RETURN            shift, and go to state 46
+    NUME_STRUCT       shift, and go to state 47
+    STRUCT            shift, and go to state 9
+    IF                shift, and go to state 48
+    WHILE             shift, and go to state 49
+    FOR               shift, and go to state 50
+    NR                shift, and go to state 51
+    INC               shift, and go to state 52
+    DEC               shift, and go to state 53
+    PRINT             shift, and go to state 54
+    COMMENT           shift, and go to state 55
+    '('               shift, and go to state 56
+    '<'               shift, and go to state 57
+
+    declaratie               go to state 58
+    non_funct_decl           go to state 14
+    var_decl                 go to state 15
+    const_decl               go to state 16
+    funct_decl               go to state 17
+    struct_decl              go to state 18
+    struct_member_selection  go to state 59
+    bloc                     go to state 60
+    list                     go to state 61
+    statement                go to state 62
+    control                  go to state 63
+    Aexp                     go to state 64
+    apel_functie             go to state 65
+
+
+State 30
+
+    3 declaratii: declaratii declaratie . '?'
+
+    '?'  shift, and go to state 66
+
+
+State 31
+
+    1 progr: declaratii main .
+
+    $default  reduce using rule 1 (progr)
+
+
+State 32
+
+    2 declaratii: declaratie '?' .
+
+    $default  reduce using rule 2 (declaratii)
+
+
+State 33
+
+   14 var_decl: TIP_VAR ID ASSIGN . NR
+
+    NR  shift, and go to state 67
+
+
+State 34
+
+   13 var_decl: TIP_VAR ID '[' . NR ']'
+
+    NR  shift, and go to state 68
+
+
+State 35
+
+   21 const_decl: TIP_CONST CID NR .
+
+    $default  reduce using rule 21 (const_decl)
+
+
+State 36
+
+   24 funct_decl: TIP_FUNCTIE ID '(' . lista_param ')' bloc
+   25           | TIP_FUNCTIE ID '(' . ')' bloc
+   26           | TIP_FUNCTIE ID '(' . lista_param ')'
+   27           | TIP_FUNCTIE ID '(' . ')'
+
+    TIP_VAR         shift, and go to state 69
+    TIP_VAR_BOOL    shift, and go to state 70
+    TIP_VAR_STRING  shift, and go to state 71
+    ')'             shift, and go to state 72
+
+    lista_param  go to state 73
+    param        go to state 74
+
+
+State 37
+
+   17 var_decl: TIP_VAR_BOOL ID ASSIGN . BOOL
+
+    BOOL  shift, and go to state 75
+
+
+State 38
+
+   16 var_decl: TIP_VAR_BOOL ID '[' . NR ']'
+
+    NR  shift, and go to state 76
+
+
+State 39
+
+   18 var_decl: TIP_VAR_STRING ID ASSIGN . STRING
+
+    STRING  shift, and go to state 77
+
+
+State 40
+
+   22 const_decl: TIP_CONST_BOOL CID BOOL .
+
+    $default  reduce using rule 22 (const_decl)
+
+
+State 41
+
+   23 const_decl: TIP_CONST_STRING CID STRING .
+
+    $default  reduce using rule 23 (const_decl)
+
+
+State 42
+
+   20 var_decl: NUME_STRUCT ID '[' . NR ']'
+
+    NR  shift, and go to state 78
+
+
+State 43
+
+   28 struct_decl: STRUCT NUME_STRUCT '<' . non_funct_decl_list '>'
+
+    TIP_VAR           shift, and go to state 1
+    TIP_CONST         shift, and go to state 2
+    TIP_VAR_BOOL      shift, and go to state 4
+    TIP_VAR_STRING    shift, and go to state 5
+    TIP_CONST_BOOL    shift, and go to state 6
+    TIP_CONST_STRING  shift, and go to state 7
+    NUME_STRUCT       shift, and go to state 8
+
+    non_funct_decl       go to state 79
+    non_funct_decl_list  go to state 80
+    var_decl             go to state 15
+    const_decl           go to state 16
+
+
+State 44
+
+   43 statement: ID . ASSIGN Aexp
+   44          | ID . ASSIGN Bexp
+   45          | ID . ASSIGN STRING
+   61 Aexp: ID .
+   64     | ID . '[' Aexp ']'
+   71     | ID . INC
+   73     | ID . DEC
+   74 apel_functie: ID . '(' lista_apel ')'
+
+    ASSIGN  shift, and go to state 81
+    INC     shift, and go to state 82
+    DEC     shift, and go to state 83
+    '['     shift, and go to state 84
+    '('     shift, and go to state 85
+
+    $default  reduce using rule 61 (Aexp)
+
+
+State 45
+
+   62 Aexp: CID .
+
+    $default  reduce using rule 62 (Aexp)
+
+
+State 46
+
+   52 statement: RETURN . Aexp
+   53          | RETURN . Bexp
+   54          | RETURN . apel_functie
+
+    ID           shift, and go to state 86
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    BOOL         shift, and go to state 88
+    NOT          shift, and go to state 89
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 90
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 91
+    apel_functie             go to state 92
+    Bexp                     go to state 93
+
+
+State 47
+
+   19 var_decl: NUME_STRUCT . ID
+   20         | NUME_STRUCT . ID '[' NR ']'
+   29 struct_member_selection: NUME_STRUCT . REF ID
+   30                        | NUME_STRUCT . REF CID
+
+    ID   shift, and go to state 26
+    REF  shift, and go to state 94
+
+
+State 48
+
+   56 control: IF . '(' Bexp ')' bloc
+   57        | IF . '(' Bexp ')' bloc ELSE bloc
+
+    '('  shift, and go to state 95
+
+
+State 49
+
+   55 control: WHILE . '(' Bexp ')' bloc
+
+    '('  shift, and go to state 96
+
+
+State 50
+
+   58 control: FOR . '(' Bexp '?' Aexp ')' bloc
+
+    '('  shift, and go to state 97
+
+
+State 51
+
+   59 Aexp: NR .
+
+    $default  reduce using rule 59 (Aexp)
+
+
+State 52
+
+   70 Aexp: INC . ID
+
+    ID  shift, and go to state 98
+
+
+State 53
+
+   72 Aexp: DEC . ID
+
+    ID  shift, and go to state 99
+
+
+State 54
+
+   47 statement: PRINT . '(' Aexp ')'
+
+    '('  shift, and go to state 100
+
+
+State 55
+
+   48 statement: COMMENT .
+
+    $default  reduce using rule 48 (statement)
+
+
+State 56
+
+   60 Aexp: '(' . Aexp ')'
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 56
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 102
+
+
+State 57
+
+   37 bloc: '<' . list '>'
+   38     | '<' . '>'
+
+    ID                shift, and go to state 44
+    CID               shift, and go to state 45
+    TIP_VAR           shift, and go to state 1
+    TIP_CONST         shift, and go to state 2
+    TIP_FUNCTIE       shift, and go to state 3
+    TIP_VAR_BOOL      shift, and go to state 4
+    TIP_VAR_STRING    shift, and go to state 5
+    TIP_CONST_BOOL    shift, and go to state 6
+    TIP_CONST_STRING  shift, and go to state 7
+    RETURN            shift, and go to state 46
+    NUME_STRUCT       shift, and go to state 47
+    STRUCT            shift, and go to state 9
+    IF                shift, and go to state 48
+    WHILE             shift, and go to state 49
+    FOR               shift, and go to state 50
+    NR                shift, and go to state 51
+    INC               shift, and go to state 52
+    DEC               shift, and go to state 53
+    PRINT             shift, and go to state 54
+    COMMENT           shift, and go to state 55
+    '('               shift, and go to state 56
+    '<'               shift, and go to state 57
+    '>'               shift, and go to state 103
+
+    declaratie               go to state 58
+    non_funct_decl           go to state 14
+    var_decl                 go to state 15
+    const_decl               go to state 16
+    funct_decl               go to state 17
+    struct_decl              go to state 18
+    struct_member_selection  go to state 59
+    bloc                     go to state 60
+    list                     go to state 104
+    statement                go to state 62
+    control                  go to state 63
+    Aexp                     go to state 64
+    apel_functie             go to state 65
+
+
+State 58
+
+   46 statement: declaratie .
+
+    $default  reduce using rule 46 (statement)
+
+
+State 59
+
+   63 Aexp: struct_member_selection .
+
+    $default  reduce using rule 63 (Aexp)
+
+
+State 60
+
+   50 statement: bloc .
+
+    $default  reduce using rule 50 (statement)
+
+
+State 61
+
+   36 main: BGIN list . END
+   41 list: list . statement '?'
+   42     | list . control
+
+    ID                shift, and go to state 44
+    CID               shift, and go to state 45
+    TIP_VAR           shift, and go to state 1
+    TIP_CONST         shift, and go to state 2
+    TIP_FUNCTIE       shift, and go to state 3
+    TIP_VAR_BOOL      shift, and go to state 4
+    TIP_VAR_STRING    shift, and go to state 5
+    TIP_CONST_BOOL    shift, and go to state 6
+    TIP_CONST_STRING  shift, and go to state 7
+    RETURN            shift, and go to state 46
+    NUME_STRUCT       shift, and go to state 47
+    STRUCT            shift, and go to state 9
+    IF                shift, and go to state 48
+    WHILE             shift, and go to state 49
+    FOR               shift, and go to state 50
+    NR                shift, and go to state 51
+    INC               shift, and go to state 52
+    DEC               shift, and go to state 53
+    PRINT             shift, and go to state 54
+    COMMENT           shift, and go to state 55
+    END               shift, and go to state 105
+    '('               shift, and go to state 56
+    '<'               shift, and go to state 57
+
+    declaratie               go to state 58
+    non_funct_decl           go to state 14
+    var_decl                 go to state 15
+    const_decl               go to state 16
+    funct_decl               go to state 17
+    struct_decl              go to state 18
+    struct_member_selection  go to state 59
+    bloc                     go to state 60
+    statement                go to state 106
+    control                  go to state 107
+    Aexp                     go to state 64
+    apel_functie             go to state 65
+
+
+State 62
+
+   39 list: statement . '?'
+
+    '?'  shift, and go to state 108
+
+
+State 63
+
+   40 list: control .
+
+    $default  reduce using rule 40 (list)
+
+
+State 64
+
+   49 statement: Aexp .
+   65 Aexp: Aexp . '+' Aexp
+   66     | Aexp . '*' Aexp
+   67     | Aexp . '-' Aexp
+   68     | Aexp . '/' Aexp
+   69     | Aexp . '%' Aexp
+
+    '+'  shift, and go to state 109
+    '-'  shift, and go to state 110
+    '*'  shift, and go to state 111
+    '/'  shift, and go to state 112
+    '%'  shift, and go to state 113
+
+    $default  reduce using rule 49 (statement)
+
+
+State 65
+
+   51 statement: apel_functie .
+
+    $default  reduce using rule 51 (statement)
+
+
+State 66
+
+    3 declaratii: declaratii declaratie '?' .
+
+    $default  reduce using rule 3 (declaratii)
+
+
+State 67
+
+   14 var_decl: TIP_VAR ID ASSIGN NR .
+
+    $default  reduce using rule 14 (var_decl)
+
+
+State 68
+
+   13 var_decl: TIP_VAR ID '[' NR . ']'
+
+    ']'  shift, and go to state 114
+
+
+State 69
+
+   33 param: TIP_VAR . ID
+
+    ID  shift, and go to state 115
+
+
+State 70
+
+   34 param: TIP_VAR_BOOL . ID
+
+    ID  shift, and go to state 116
+
+
+State 71
+
+   35 param: TIP_VAR_STRING . ID
+
+    ID  shift, and go to state 117
+
+
+State 72
+
+   25 funct_decl: TIP_FUNCTIE ID '(' ')' . bloc
+   27           | TIP_FUNCTIE ID '(' ')' .
+
+    '<'  shift, and go to state 57
+
+    $default  reduce using rule 27 (funct_decl)
+
+    bloc  go to state 118
+
+
+State 73
+
+   24 funct_decl: TIP_FUNCTIE ID '(' lista_param . ')' bloc
+   26           | TIP_FUNCTIE ID '(' lista_param . ')'
+   32 lista_param: lista_param . ',' param
+
+    ')'  shift, and go to state 119
+    ','  shift, and go to state 120
+
+
+State 74
+
+   31 lista_param: param .
+
+    $default  reduce using rule 31 (lista_param)
+
+
+State 75
+
+   17 var_decl: TIP_VAR_BOOL ID ASSIGN BOOL .
+
+    $default  reduce using rule 17 (var_decl)
+
+
+State 76
+
+   16 var_decl: TIP_VAR_BOOL ID '[' NR . ']'
+
+    ']'  shift, and go to state 121
+
+
+State 77
+
+   18 var_decl: TIP_VAR_STRING ID ASSIGN STRING .
+
+    $default  reduce using rule 18 (var_decl)
+
+
+State 78
+
+   20 var_decl: NUME_STRUCT ID '[' NR . ']'
+
+    ']'  shift, and go to state 122
+
+
+State 79
+
+   10 non_funct_decl_list: non_funct_decl . '?'
+
+    '?'  shift, and go to state 123
+
+
+State 80
+
+   11 non_funct_decl_list: non_funct_decl_list . non_funct_decl '?'
+   28 struct_decl: STRUCT NUME_STRUCT '<' non_funct_decl_list . '>'
+
+    TIP_VAR           shift, and go to state 1
+    TIP_CONST         shift, and go to state 2
+    TIP_VAR_BOOL      shift, and go to state 4
+    TIP_VAR_STRING    shift, and go to state 5
+    TIP_CONST_BOOL    shift, and go to state 6
+    TIP_CONST_STRING  shift, and go to state 7
+    NUME_STRUCT       shift, and go to state 8
+    '>'               shift, and go to state 124
+
+    non_funct_decl  go to state 125
+    var_decl        go to state 15
+    const_decl      go to state 16
+
+
+State 81
+
+   43 statement: ID ASSIGN . Aexp
+   44          | ID ASSIGN . Bexp
+   45          | ID ASSIGN . STRING
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    BOOL         shift, and go to state 88
+    NOT          shift, and go to state 89
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    STRING       shift, and go to state 126
+    '('          shift, and go to state 90
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 127
+    Bexp                     go to state 128
+
+
+State 82
+
+   71 Aexp: ID INC .
+
+    $default  reduce using rule 71 (Aexp)
+
+
+State 83
+
+   73 Aexp: ID DEC .
+
+    $default  reduce using rule 73 (Aexp)
+
+
+State 84
+
+   64 Aexp: ID '[' . Aexp ']'
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 56
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 129
+
+
+State 85
+
+   74 apel_functie: ID '(' . lista_apel ')'
+
+    ID      shift, and go to state 130
+    CID     shift, and go to state 131
+    NR      shift, and go to state 132
+    BOOL    shift, and go to state 133
+    STRING  shift, and go to state 134
+
+    apel_functie  go to state 135
+    lista_apel    go to state 136
+    apelabil      go to state 137
+
+
+State 86
+
+   61 Aexp: ID .
+   64     | ID . '[' Aexp ']'
+   71     | ID . INC
+   73     | ID . DEC
+   74 apel_functie: ID . '(' lista_apel ')'
+
+    INC  shift, and go to state 82
+    DEC  shift, and go to state 83
+    '['  shift, and go to state 84
+    '('  shift, and go to state 85
+
+    $default  reduce using rule 61 (Aexp)
+
+
+State 87
+
+   29 struct_member_selection: NUME_STRUCT . REF ID
+   30                        | NUME_STRUCT . REF CID
+
+    REF  shift, and go to state 94
+
+
+State 88
+
+   75 Bexp: BOOL .
+
+    $default  reduce using rule 75 (Bexp)
+
+
+State 89
+
+   82 Bexp: NOT . Bexp
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    BOOL         shift, and go to state 88
+    NOT          shift, and go to state 89
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 90
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 138
+    Bexp                     go to state 139
+
+
+State 90
+
+   60 Aexp: '(' . Aexp ')'
+   83 Bexp: '(' . Bexp ')'
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    BOOL         shift, and go to state 88
+    NOT          shift, and go to state 89
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 90
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 140
+    Bexp                     go to state 141
+
+
+State 91
+
+   52 statement: RETURN Aexp .
+   65 Aexp: Aexp . '+' Aexp
+   66     | Aexp . '*' Aexp
+   67     | Aexp . '-' Aexp
+   68     | Aexp . '/' Aexp
+   69     | Aexp . '%' Aexp
+   76 Bexp: Aexp . COMP Aexp
+   77     | Aexp . COMP Bexp
+   78     | Aexp . AND Aexp
+   79     | Aexp . OR Aexp
+   80     | Aexp . AND Bexp
+   81     | Aexp . OR Bexp
+
+    AND   shift, and go to state 142
+    OR    shift, and go to state 143
+    COMP  shift, and go to state 144
+    '+'   shift, and go to state 109
+    '-'   shift, and go to state 110
+    '*'   shift, and go to state 111
+    '/'   shift, and go to state 112
+    '%'   shift, and go to state 113
+
+    $default  reduce using rule 52 (statement)
+
+
+State 92
+
+   54 statement: RETURN apel_functie .
+
+    $default  reduce using rule 54 (statement)
+
+
+State 93
+
+   53 statement: RETURN Bexp .
+
+    $default  reduce using rule 53 (statement)
+
+
+State 94
+
+   29 struct_member_selection: NUME_STRUCT REF . ID
+   30                        | NUME_STRUCT REF . CID
+
+    ID   shift, and go to state 145
+    CID  shift, and go to state 146
+
+
+State 95
+
+   56 control: IF '(' . Bexp ')' bloc
+   57        | IF '(' . Bexp ')' bloc ELSE bloc
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    BOOL         shift, and go to state 88
+    NOT          shift, and go to state 89
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 90
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 138
+    Bexp                     go to state 147
+
+
+State 96
+
+   55 control: WHILE '(' . Bexp ')' bloc
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    BOOL         shift, and go to state 88
+    NOT          shift, and go to state 89
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 90
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 138
+    Bexp                     go to state 148
+
+
+State 97
+
+   58 control: FOR '(' . Bexp '?' Aexp ')' bloc
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    BOOL         shift, and go to state 88
+    NOT          shift, and go to state 89
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 90
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 138
+    Bexp                     go to state 149
+
+
+State 98
+
+   70 Aexp: INC ID .
+
+    $default  reduce using rule 70 (Aexp)
+
+
+State 99
+
+   72 Aexp: DEC ID .
+
+    $default  reduce using rule 72 (Aexp)
+
+
+State 100
+
+   47 statement: PRINT '(' . Aexp ')'
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 56
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 150
+
+
+State 101
+
+   61 Aexp: ID .
+   64     | ID . '[' Aexp ']'
+   71     | ID . INC
+   73     | ID . DEC
+
+    INC  shift, and go to state 82
+    DEC  shift, and go to state 83
+    '['  shift, and go to state 84
+
+    $default  reduce using rule 61 (Aexp)
+
+
+State 102
+
+   60 Aexp: '(' Aexp . ')'
+   65     | Aexp . '+' Aexp
+   66     | Aexp . '*' Aexp
+   67     | Aexp . '-' Aexp
+   68     | Aexp . '/' Aexp
+   69     | Aexp . '%' Aexp
+
+    '+'  shift, and go to state 109
+    '-'  shift, and go to state 110
+    '*'  shift, and go to state 111
+    '/'  shift, and go to state 112
+    '%'  shift, and go to state 113
+    ')'  shift, and go to state 151
+
+
+State 103
+
+   38 bloc: '<' '>' .
+
+    $default  reduce using rule 38 (bloc)
+
+
+State 104
+
+   37 bloc: '<' list . '>'
+   41 list: list . statement '?'
+   42     | list . control
+
+    ID                shift, and go to state 44
+    CID               shift, and go to state 45
+    TIP_VAR           shift, and go to state 1
+    TIP_CONST         shift, and go to state 2
+    TIP_FUNCTIE       shift, and go to state 3
+    TIP_VAR_BOOL      shift, and go to state 4
+    TIP_VAR_STRING    shift, and go to state 5
+    TIP_CONST_BOOL    shift, and go to state 6
+    TIP_CONST_STRING  shift, and go to state 7
+    RETURN            shift, and go to state 46
+    NUME_STRUCT       shift, and go to state 47
+    STRUCT            shift, and go to state 9
+    IF                shift, and go to state 48
+    WHILE             shift, and go to state 49
+    FOR               shift, and go to state 50
+    NR                shift, and go to state 51
+    INC               shift, and go to state 52
+    DEC               shift, and go to state 53
+    PRINT             shift, and go to state 54
+    COMMENT           shift, and go to state 55
+    '('               shift, and go to state 56
+    '<'               shift, and go to state 57
+    '>'               shift, and go to state 152
+
+    declaratie               go to state 58
+    non_funct_decl           go to state 14
+    var_decl                 go to state 15
+    const_decl               go to state 16
+    funct_decl               go to state 17
+    struct_decl              go to state 18
+    struct_member_selection  go to state 59
+    bloc                     go to state 60
+    statement                go to state 106
+    control                  go to state 107
+    Aexp                     go to state 64
+    apel_functie             go to state 65
+
+
+State 105
+
+   36 main: BGIN list END .
+
+    $default  reduce using rule 36 (main)
+
+
+State 106
+
+   41 list: list statement . '?'
+
+    '?'  shift, and go to state 153
+
+
+State 107
+
+   42 list: list control .
+
+    $default  reduce using rule 42 (list)
+
+
+State 108
+
+   39 list: statement '?' .
+
+    $default  reduce using rule 39 (list)
+
+
+State 109
+
+   65 Aexp: Aexp '+' . Aexp
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 56
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 154
+
+
+State 110
+
+   67 Aexp: Aexp '-' . Aexp
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 56
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 155
+
+
+State 111
+
+   66 Aexp: Aexp '*' . Aexp
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 56
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 156
+
+
+State 112
+
+   68 Aexp: Aexp '/' . Aexp
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 56
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 157
+
+
+State 113
+
+   69 Aexp: Aexp '%' . Aexp
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 56
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 158
+
+
+State 114
+
+   13 var_decl: TIP_VAR ID '[' NR ']' .
+
+    $default  reduce using rule 13 (var_decl)
+
+
+State 115
+
+   33 param: TIP_VAR ID .
+
+    $default  reduce using rule 33 (param)
+
+
+State 116
+
+   34 param: TIP_VAR_BOOL ID .
+
+    $default  reduce using rule 34 (param)
+
+
+State 117
+
+   35 param: TIP_VAR_STRING ID .
+
+    $default  reduce using rule 35 (param)
+
+
+State 118
+
+   25 funct_decl: TIP_FUNCTIE ID '(' ')' bloc .
+
+    $default  reduce using rule 25 (funct_decl)
+
+
+State 119
+
+   24 funct_decl: TIP_FUNCTIE ID '(' lista_param ')' . bloc
+   26           | TIP_FUNCTIE ID '(' lista_param ')' .
+
+    '<'  shift, and go to state 57
+
+    $default  reduce using rule 26 (funct_decl)
+
+    bloc  go to state 159
+
+
+State 120
+
+   32 lista_param: lista_param ',' . param
+
+    TIP_VAR         shift, and go to state 69
+    TIP_VAR_BOOL    shift, and go to state 70
+    TIP_VAR_STRING  shift, and go to state 71
+
+    param  go to state 160
+
+
+State 121
+
+   16 var_decl: TIP_VAR_BOOL ID '[' NR ']' .
+
+    $default  reduce using rule 16 (var_decl)
+
+
+State 122
+
+   20 var_decl: NUME_STRUCT ID '[' NR ']' .
+
+    $default  reduce using rule 20 (var_decl)
+
+
+State 123
+
+   10 non_funct_decl_list: non_funct_decl '?' .
+
+    $default  reduce using rule 10 (non_funct_decl_list)
+
+
+State 124
+
+   28 struct_decl: STRUCT NUME_STRUCT '<' non_funct_decl_list '>' .
+
+    $default  reduce using rule 28 (struct_decl)
+
+
+State 125
+
+   11 non_funct_decl_list: non_funct_decl_list non_funct_decl . '?'
+
+    '?'  shift, and go to state 161
+
+
+State 126
+
+   45 statement: ID ASSIGN STRING .
+
+    $default  reduce using rule 45 (statement)
+
+
+State 127
+
+   43 statement: ID ASSIGN Aexp .
+   65 Aexp: Aexp . '+' Aexp
+   66     | Aexp . '*' Aexp
+   67     | Aexp . '-' Aexp
+   68     | Aexp . '/' Aexp
+   69     | Aexp . '%' Aexp
+   76 Bexp: Aexp . COMP Aexp
+   77     | Aexp . COMP Bexp
+   78     | Aexp . AND Aexp
+   79     | Aexp . OR Aexp
+   80     | Aexp . AND Bexp
+   81     | Aexp . OR Bexp
+
+    AND   shift, and go to state 142
+    OR    shift, and go to state 143
+    COMP  shift, and go to state 144
+    '+'   shift, and go to state 109
+    '-'   shift, and go to state 110
+    '*'   shift, and go to state 111
+    '/'   shift, and go to state 112
+    '%'   shift, and go to state 113
+
+    $default  reduce using rule 43 (statement)
+
+
+State 128
+
+   44 statement: ID ASSIGN Bexp .
+
+    $default  reduce using rule 44 (statement)
+
+
+State 129
+
+   64 Aexp: ID '[' Aexp . ']'
+   65     | Aexp . '+' Aexp
+   66     | Aexp . '*' Aexp
+   67     | Aexp . '-' Aexp
+   68     | Aexp . '/' Aexp
+   69     | Aexp . '%' Aexp
+
+    '+'  shift, and go to state 109
+    '-'  shift, and go to state 110
+    '*'  shift, and go to state 111
+    '/'  shift, and go to state 112
+    '%'  shift, and go to state 113
+    ']'  shift, and go to state 162
+
+
+State 130
+
+   74 apel_functie: ID . '(' lista_apel ')'
+   89 apelabil: ID .
+
+    '('  shift, and go to state 85
+
+    $default  reduce using rule 89 (apelabil)
+
+
+State 131
+
+   90 apelabil: CID .
+
+    $default  reduce using rule 90 (apelabil)
+
+
+State 132
+
+   86 apelabil: NR .
+
+    $default  reduce using rule 86 (apelabil)
+
+
+State 133
+
+   87 apelabil: BOOL .
+
+    $default  reduce using rule 87 (apelabil)
+
+
+State 134
+
+   88 apelabil: STRING .
+
+    $default  reduce using rule 88 (apelabil)
+
+
+State 135
+
+   91 apelabil: apel_functie .
+
+    $default  reduce using rule 91 (apelabil)
+
+
+State 136
+
+   74 apel_functie: ID '(' lista_apel . ')'
+   85 lista_apel: lista_apel . ',' apelabil
+
+    ')'  shift, and go to state 163
+    ','  shift, and go to state 164
+
+
+State 137
+
+   84 lista_apel: apelabil .
+
+    $default  reduce using rule 84 (lista_apel)
+
+
+State 138
+
+   65 Aexp: Aexp . '+' Aexp
+   66     | Aexp . '*' Aexp
+   67     | Aexp . '-' Aexp
+   68     | Aexp . '/' Aexp
+   69     | Aexp . '%' Aexp
+   76 Bexp: Aexp . COMP Aexp
+   77     | Aexp . COMP Bexp
+   78     | Aexp . AND Aexp
+   79     | Aexp . OR Aexp
+   80     | Aexp . AND Bexp
+   81     | Aexp . OR Bexp
+
+    AND   shift, and go to state 142
+    OR    shift, and go to state 143
+    COMP  shift, and go to state 144
+    '+'   shift, and go to state 109
+    '-'   shift, and go to state 110
+    '*'   shift, and go to state 111
+    '/'   shift, and go to state 112
+    '%'   shift, and go to state 113
+
+
+State 139
+
+   82 Bexp: NOT Bexp .
+
+    $default  reduce using rule 82 (Bexp)
+
+
+State 140
+
+   60 Aexp: '(' Aexp . ')'
+   65     | Aexp . '+' Aexp
+   66     | Aexp . '*' Aexp
+   67     | Aexp . '-' Aexp
+   68     | Aexp . '/' Aexp
+   69     | Aexp . '%' Aexp
+   76 Bexp: Aexp . COMP Aexp
+   77     | Aexp . COMP Bexp
+   78     | Aexp . AND Aexp
+   79     | Aexp . OR Aexp
+   80     | Aexp . AND Bexp
+   81     | Aexp . OR Bexp
+
+    AND   shift, and go to state 142
+    OR    shift, and go to state 143
+    COMP  shift, and go to state 144
+    '+'   shift, and go to state 109
+    '-'   shift, and go to state 110
+    '*'   shift, and go to state 111
+    '/'   shift, and go to state 112
+    '%'   shift, and go to state 113
+    ')'   shift, and go to state 151
+
+
+State 141
+
+   83 Bexp: '(' Bexp . ')'
+
+    ')'  shift, and go to state 165
+
+
+State 142
+
+   78 Bexp: Aexp AND . Aexp
+   80     | Aexp AND . Bexp
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    BOOL         shift, and go to state 88
+    NOT          shift, and go to state 89
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 90
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 166
+    Bexp                     go to state 167
+
+
+State 143
+
+   79 Bexp: Aexp OR . Aexp
+   81     | Aexp OR . Bexp
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    BOOL         shift, and go to state 88
+    NOT          shift, and go to state 89
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 90
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 168
+    Bexp                     go to state 169
+
+
+State 144
+
+   76 Bexp: Aexp COMP . Aexp
+   77     | Aexp COMP . Bexp
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    BOOL         shift, and go to state 88
+    NOT          shift, and go to state 89
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 90
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 170
+    Bexp                     go to state 171
+
+
+State 145
+
+   29 struct_member_selection: NUME_STRUCT REF ID .
+
+    $default  reduce using rule 29 (struct_member_selection)
+
+
+State 146
+
+   30 struct_member_selection: NUME_STRUCT REF CID .
+
+    $default  reduce using rule 30 (struct_member_selection)
+
+
+State 147
+
+   56 control: IF '(' Bexp . ')' bloc
+   57        | IF '(' Bexp . ')' bloc ELSE bloc
+
+    ')'  shift, and go to state 172
+
+
+State 148
+
+   55 control: WHILE '(' Bexp . ')' bloc
+
+    ')'  shift, and go to state 173
+
+
+State 149
+
+   58 control: FOR '(' Bexp . '?' Aexp ')' bloc
+
+    '?'  shift, and go to state 174
+
+
+State 150
+
+   47 statement: PRINT '(' Aexp . ')'
+   65 Aexp: Aexp . '+' Aexp
+   66     | Aexp . '*' Aexp
+   67     | Aexp . '-' Aexp
+   68     | Aexp . '/' Aexp
+   69     | Aexp . '%' Aexp
+
+    '+'  shift, and go to state 109
+    '-'  shift, and go to state 110
+    '*'  shift, and go to state 111
+    '/'  shift, and go to state 112
+    '%'  shift, and go to state 113
+    ')'  shift, and go to state 175
+
+
+State 151
+
+   60 Aexp: '(' Aexp ')' .
+
+    $default  reduce using rule 60 (Aexp)
+
+
+State 152
+
+   37 bloc: '<' list '>' .
+
+    $default  reduce using rule 37 (bloc)
+
+
+State 153
+
+   41 list: list statement '?' .
+
+    $default  reduce using rule 41 (list)
+
+
+State 154
+
+   65 Aexp: Aexp . '+' Aexp
+   65     | Aexp '+' Aexp .
+   66     | Aexp . '*' Aexp
+   67     | Aexp . '-' Aexp
+   68     | Aexp . '/' Aexp
+   69     | Aexp . '%' Aexp
+
+    '*'  shift, and go to state 111
+    '/'  shift, and go to state 112
+    '%'  shift, and go to state 113
+
+    $default  reduce using rule 65 (Aexp)
+
+
+State 155
+
+   65 Aexp: Aexp . '+' Aexp
+   66     | Aexp . '*' Aexp
+   67     | Aexp . '-' Aexp
+   67     | Aexp '-' Aexp .
+   68     | Aexp . '/' Aexp
+   69     | Aexp . '%' Aexp
+
+    '*'  shift, and go to state 111
+    '/'  shift, and go to state 112
+    '%'  shift, and go to state 113
+
+    $default  reduce using rule 67 (Aexp)
+
+
+State 156
+
+   65 Aexp: Aexp . '+' Aexp
+   66     | Aexp . '*' Aexp
+   66     | Aexp '*' Aexp .
+   67     | Aexp . '-' Aexp
+   68     | Aexp . '/' Aexp
+   69     | Aexp . '%' Aexp
+
+    $default  reduce using rule 66 (Aexp)
+
+
+State 157
+
+   65 Aexp: Aexp . '+' Aexp
+   66     | Aexp . '*' Aexp
+   67     | Aexp . '-' Aexp
+   68     | Aexp . '/' Aexp
+   68     | Aexp '/' Aexp .
+   69     | Aexp . '%' Aexp
+
+    $default  reduce using rule 68 (Aexp)
+
+
+State 158
+
+   65 Aexp: Aexp . '+' Aexp
+   66     | Aexp . '*' Aexp
+   67     | Aexp . '-' Aexp
+   68     | Aexp . '/' Aexp
+   69     | Aexp . '%' Aexp
+   69     | Aexp '%' Aexp .
+
+    $default  reduce using rule 69 (Aexp)
+
+
+State 159
+
+   24 funct_decl: TIP_FUNCTIE ID '(' lista_param ')' bloc .
+
+    $default  reduce using rule 24 (funct_decl)
+
+
+State 160
+
+   32 lista_param: lista_param ',' param .
+
+    $default  reduce using rule 32 (lista_param)
+
+
+State 161
+
+   11 non_funct_decl_list: non_funct_decl_list non_funct_decl '?' .
+
+    $default  reduce using rule 11 (non_funct_decl_list)
+
+
+State 162
+
+   64 Aexp: ID '[' Aexp ']' .
+
+    $default  reduce using rule 64 (Aexp)
+
+
+State 163
+
+   74 apel_functie: ID '(' lista_apel ')' .
+
+    $default  reduce using rule 74 (apel_functie)
+
+
+State 164
+
+   85 lista_apel: lista_apel ',' . apelabil
+
+    ID      shift, and go to state 130
+    CID     shift, and go to state 131
+    NR      shift, and go to state 132
+    BOOL    shift, and go to state 133
+    STRING  shift, and go to state 134
+
+    apel_functie  go to state 135
+    apelabil      go to state 176
+
+
+State 165
+
+   83 Bexp: '(' Bexp ')' .
+
+    $default  reduce using rule 83 (Bexp)
+
+
+State 166
+
+   65 Aexp: Aexp . '+' Aexp
+   66     | Aexp . '*' Aexp
+   67     | Aexp . '-' Aexp
+   68     | Aexp . '/' Aexp
+   69     | Aexp . '%' Aexp
+   76 Bexp: Aexp . COMP Aexp
+   77     | Aexp . COMP Bexp
+   78     | Aexp . AND Aexp
+   78     | Aexp AND Aexp .
+   79     | Aexp . OR Aexp
+   80     | Aexp . AND Bexp
+   81     | Aexp . OR Bexp
+
+    AND   shift, and go to state 142
+    OR    shift, and go to state 143
+    COMP  shift, and go to state 144
+    '+'   shift, and go to state 109
+    '-'   shift, and go to state 110
+    '*'   shift, and go to state 111
+    '/'   shift, and go to state 112
+    '%'   shift, and go to state 113
+
+    $default  reduce using rule 78 (Bexp)
+
+
+State 167
+
+   80 Bexp: Aexp AND Bexp .
+
+    $default  reduce using rule 80 (Bexp)
+
+
+State 168
+
+   65 Aexp: Aexp . '+' Aexp
+   66     | Aexp . '*' Aexp
+   67     | Aexp . '-' Aexp
+   68     | Aexp . '/' Aexp
+   69     | Aexp . '%' Aexp
+   76 Bexp: Aexp . COMP Aexp
+   77     | Aexp . COMP Bexp
+   78     | Aexp . AND Aexp
+   79     | Aexp . OR Aexp
+   79     | Aexp OR Aexp .
+   80     | Aexp . AND Bexp
+   81     | Aexp . OR Bexp
+
+    AND   shift, and go to state 142
+    OR    shift, and go to state 143
+    COMP  shift, and go to state 144
+    '+'   shift, and go to state 109
+    '-'   shift, and go to state 110
+    '*'   shift, and go to state 111
+    '/'   shift, and go to state 112
+    '%'   shift, and go to state 113
+
+    $default  reduce using rule 79 (Bexp)
+
+
+State 169
+
+   81 Bexp: Aexp OR Bexp .
+
+    $default  reduce using rule 81 (Bexp)
+
+
+State 170
+
+   65 Aexp: Aexp . '+' Aexp
+   66     | Aexp . '*' Aexp
+   67     | Aexp . '-' Aexp
+   68     | Aexp . '/' Aexp
+   69     | Aexp . '%' Aexp
+   76 Bexp: Aexp . COMP Aexp
+   76     | Aexp COMP Aexp .
+   77     | Aexp . COMP Bexp
+   78     | Aexp . AND Aexp
+   79     | Aexp . OR Aexp
+   80     | Aexp . AND Bexp
+   81     | Aexp . OR Bexp
+
+    AND   shift, and go to state 142
+    OR    shift, and go to state 143
+    COMP  shift, and go to state 144
+    '+'   shift, and go to state 109
+    '-'   shift, and go to state 110
+    '*'   shift, and go to state 111
+    '/'   shift, and go to state 112
+    '%'   shift, and go to state 113
+
+    $default  reduce using rule 76 (Bexp)
+
+
+State 171
+
+   77 Bexp: Aexp COMP Bexp .
+
+    $default  reduce using rule 77 (Bexp)
+
+
+State 172
+
+   56 control: IF '(' Bexp ')' . bloc
+   57        | IF '(' Bexp ')' . bloc ELSE bloc
+
+    '<'  shift, and go to state 57
+
+    bloc  go to state 177
+
+
+State 173
+
+   55 control: WHILE '(' Bexp ')' . bloc
+
+    '<'  shift, and go to state 57
+
+    bloc  go to state 178
+
+
+State 174
+
+   58 control: FOR '(' Bexp '?' . Aexp ')' bloc
+
+    ID           shift, and go to state 101
+    CID          shift, and go to state 45
+    NUME_STRUCT  shift, and go to state 87
+    NR           shift, and go to state 51
+    INC          shift, and go to state 52
+    DEC          shift, and go to state 53
+    '('          shift, and go to state 56
+
+    struct_member_selection  go to state 59
+    Aexp                     go to state 179
+
+
+State 175
+
+   47 statement: PRINT '(' Aexp ')' .
+
+    $default  reduce using rule 47 (statement)
+
+
+State 176
+
+   85 lista_apel: lista_apel ',' apelabil .
+
+    $default  reduce using rule 85 (lista_apel)
+
+
+State 177
+
+   56 control: IF '(' Bexp ')' bloc .
+   57        | IF '(' Bexp ')' bloc . ELSE bloc
+
+    ELSE  shift, and go to state 180
+
+    $default  reduce using rule 56 (control)
+
+
+State 178
+
+   55 control: WHILE '(' Bexp ')' bloc .
+
+    $default  reduce using rule 55 (control)
+
+
+State 179
+
+   58 control: FOR '(' Bexp '?' Aexp . ')' bloc
+   65 Aexp: Aexp . '+' Aexp
+   66     | Aexp . '*' Aexp
+   67     | Aexp . '-' Aexp
+   68     | Aexp . '/' Aexp
+   69     | Aexp . '%' Aexp
+
+    '+'  shift, and go to state 109
+    '-'  shift, and go to state 110
+    '*'  shift, and go to state 111
+    '/'  shift, and go to state 112
+    '%'  shift, and go to state 113
+    ')'  shift, and go to state 181
+
+
+State 180
+
+   57 control: IF '(' Bexp ')' bloc ELSE . bloc
+
+    '<'  shift, and go to state 57
+
+    bloc  go to state 182
+
+
+State 181
+
+   58 control: FOR '(' Bexp '?' Aexp ')' . bloc
+
+    '<'  shift, and go to state 57
+
+    bloc  go to state 183
+
+
+State 182
+
+   57 control: IF '(' Bexp ')' bloc ELSE bloc .
+
+    $default  reduce using rule 57 (control)
+
+
+State 183
+
+   58 control: FOR '(' Bexp '?' Aexp ')' bloc .
+
+    $default  reduce using rule 58 (control)

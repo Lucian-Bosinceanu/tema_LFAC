@@ -1,41 +1,58 @@
-cred ca int abc?
-cred ca bool ceva =? adivarat?
-cred ca float date[45]?
-o functie string numeF (cred ca int A, cred ca float B) <
+cred ca int abc =? 40?
+cred ca float f =? 34.4?
+cred ca bool b =? fals?
+mereu int C 40?
+cred ca int a?
 
-    cred ca string cineva = "ceva ceva"?
-    
-    //? ???? este functia de afisare
-    ????(A+B)?
-    intoarce cineva?
->
+o functie string functie_2 ()?
+
+o functie int functie(cred ca int a, cred ca string b) <
+    a =? 34534?
+    intoarce functie_2(43543, adivarat, "ceva", functie(34, 3.12, a))? 
+> ?
+mereu string C "40"?
+cred ca int vector[100]?
+
+un struct _data  <
+
+    cred ca string locatie =? "Romania"?
+    cred ca int zi?
+    cred ca int luna?
+    cred ca int an? 
+    mereu float PI 3.14?
+
+> ?
 
 aa...
 
-    cred ca int i,j?
+    abc =? 10?
 
-    i =? 1 + 4?
-    j =? 10?
-
-    cat timp ( i !?= j )
-        <
-            i+?+?  
-            j-?-?
-        >     
-
-    un struct _numeStruct: <
+    _data d1? 
     
-        cred ca string nume?
-        cred ca int varsta?
-        cred ca float inaltime35?
-    >
-    _numeStruct elev;  
+    cat timp ( abc >? 343 )
+        <
+            ceva =? "un string amarat"?
+            abc-?-?
+        >
 
-    elev ~> nume =? numeF(30,40.5)?
-    elev ~> varsta =? i?
+    pentru (  i <? n ? i+?+ )
+        < ceva =? ( 2 + 2 + 4 * ( 3453453 % 353 / 23 ) ) - -?-i? 
+        > 
 
-    date[j] =? 10?
+    daca ( abc <? 4545 )
+        <
+        daca ( abc >? 34 )
+            <
+            abc =? 335345435?
+            > 
+        > 
+        altfel
+        <>
 
-    ????(elev ~> varsta)?
+    i =? 0?
+    pentru ( i <?= 99 ? i+?+  )
+        < ????(vector[i])?>
+
+    i =? b |?| b322dd &?& ?!( 2343 >?= abc )?
 
 ...da

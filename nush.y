@@ -6,102 +6,156 @@ extern int yylineno;
 %}
 
 %token ID CID TIP_VAR TIP_CONST TIP_FUNCTIE TIP_VAR_BOOL TIP_VAR_STRING TIP_CONST_BOOL TIP_CONST_STRING RETURN
-       NUME_STRUCT TIP_STRUCT REF
-       IF ELSE WHILE FOR
+       NUME_STRUCT STRUCT REF
+       IF WHILE FOR
        NR BOOL ASSIGN AND OR NOT INC DEC COMP
        STRING
-       PRINT COMMENT BEGIN END
+       PRINT COMMENT BGIN END
 %start progr
 
+%left '+' '-'
+%left '*' '/' '%'
+%nonassoc NO_ELSE 
+%nonassoc ELSE 
+
 %%
-progr : declaratii bloc {printf("program corect sintactic\n");}
+progr : declaratii main {printf("program corect sintactic\n");}
       ;
 
 declaratii  : declaratie '?'
-	      | declaratii declaratie '?'
+	        | declaratii declaratie '?'
+            | COMMENT
 	      ;
 
-declaratie  : TIP_VAR ID
-            | TIP_VAR ID '[' NR ']'
-            | TIP_VAR ID ASSIGN NR
-            | TIP_VAR_BOOL ID
-            | TIP_VAR_BOOL '[' NR ']'
-            | TIP_VAR_BOOL ID ASSIGN BOOL
-            | TIP_CONST CID NR
-            | TIP_CONST_BOOL CID BOOL
-            | TIP_VAR_STRING ID STRING
-            | TIP_CONST_STRING CID STRING
-            | TIP_FUNCTIE ID '(' lista_param ')'
-            | TIP_FUNCTIE ID '(' ')'
-            | TIP_FUNCTIE ID '(' lista_param ')' bloc
-            | TIP_FUNCTIE ID '(' ')' bloc 
+declaratie  : non_funct_decl
+            | funct_decl
+            | struct_decl
             ;
 
+non_funct_decl: var_decl
+              | const_decl
+              ;
+
+non_funct_decl_list: non_funct_decl '?'
+                   | non_funct_decl_list non_funct_decl '?'
+
+var_decl: TIP_VAR ID
+        | TIP_VAR ID '[' NR ']'
+        | TIP_VAR ID ASSIGN NR
+        | TIP_VAR_BOOL ID
+        | TIP_VAR_BOOL ID '[' NR ']'
+        | TIP_VAR_BOOL ID ASSIGN BOOL
+        | TIP_VAR_STRING ID ASSIGN STRING
+        | NUME_STRUCT ID
+        | NUME_STRUCT ID '[' NR ']'
+        ;
+
+const_decl: TIP_CONST CID NR
+          | TIP_CONST_BOOL CID BOOL
+          | TIP_CONST_STRING CID STRING
+          ;
+
+funct_decl: TIP_FUNCTIE ID '(' lista_param ')' bloc
+          | TIP_FUNCTIE ID '(' ')' bloc
+          | TIP_FUNCTIE ID '(' lista_param ')'
+          | TIP_FUNCTIE ID '(' ')' 
+          ;
+
+struct_decl : STRUCT NUME_STRUCT '<' non_funct_decl_list '>'
+            ;
+
+struct_member_selection : NUME_STRUCT REF ID
+                        | NUME_STRUCT REF CID 
+                        ;
 
 lista_param : param
             | lista_param ',' param 
             ;
             
 param : TIP_VAR ID
-      | TIP_FUNCTIE ID '(' lista_param ')'
-      | TIP_FUNCTIE ID '(' ')'
+      | TIP_VAR_BOOL ID
+      | TIP_VAR_STRING ID
       ; 
       
-/* bloc */
-main : BEGIN list END  
+main : BGIN list END  
      ;
 
 bloc : '<' list '>'
-     | '<' list RETURN '>'
+     | '<' '>'
      ; 
 
 /* lista instructiuni */
 list :  statement '?' 
-     | list statement '?'
      | control
+     | list statement '?'
      | list control
      ;
 
 /* instructiune */
-statement: ID ASSIGN ID
-         | ID ASSIGN NR  
-         | ID ASSIGN Aexp		 
+statement: ID ASSIGN Aexp		 
          | ID ASSIGN Bexp
-         | ID '(' lista_apel ')'
+         | ID ASSIGN STRING
          | declaratie
          | PRINT '(' Aexp ')'
          | COMMENT
+         | Aexp
+         | bloc
+         | apel_functie
+         | RETURN Aexp
+         | RETURN Bexp
+         | RETURN apel_functie
          ;
-        
+
 control: WHILE '(' Bexp ')' bloc
+       | IF '(' Bexp ')' bloc  %prec NO_ELSE
        | IF '(' Bexp ')' bloc ELSE bloc
-       | FOR '(' Aexp '?' Bexp '?' Aexp ')'
+       | FOR '(' Bexp '?' Aexp ')' bloc
        ;
 
 /* Expresii aritmetice */
 Aexp: NR
     | '(' Aexp ')'
+    | ID
+    | CID
+    | struct_member_selection
+    | ID '[' Aexp ']'
     | Aexp '+' Aexp  
     | Aexp '*' Aexp
     | Aexp '-' Aexp
     | Aexp '/' Aexp
+    | Aexp '%' Aexp
     | INC ID
     | ID INC
     | DEC ID
     | ID DEC
     ;
 
+apel_functie: ID '(' lista_apel ')'
+            ;
+
 Bexp: BOOL
     | Aexp COMP Aexp
-    | Bexp AND Bexp
-    | Bexp OR Bexp
-    | Bexp NOT Bexp
-    | (Bexp)
+    | Aexp COMP Bexp
+    | Aexp AND Aexp
+    | Aexp OR Aexp
+    | Aexp AND Bexp
+    | Aexp OR Bexp
+    | NOT Bexp 
+    | '(' Bexp ')'
     ; 
         
-lista_apel : NR
-           | lista_apel ',' NR
+lista_apel : apelabil
+           | lista_apel ',' apelabil
            ;
+
+apelabil: NR
+        | BOOL
+        | STRING 
+        | ID
+        | CID
+        | apel_functie
+        ;
+
 %%
 int yyerror(char * s){
 printf("eroare: %s la linia:%d\n",s,yylineno);

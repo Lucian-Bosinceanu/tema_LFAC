@@ -10,16 +10,14 @@
 "cred ca bool" {return TIP_VAR_BOOL;}
 "mereu "("int"|"float") {return TIP_CONST;}
 "mereu bool" {return TIP_CONST_BOOL;}
-"o functie "("int"|"float"|"bool"|"string") {return TIP_FUNCTIE;}
-"o functie void" {return TIP_FUNCTIE_VOID;}
-[a-zA-Z][_a-zA-Z0-9]* {return ID;}
-[A-Z]+ {return CID;}
+"o functie "("int"|"float"|"bool"|"string"|"void") {return TIP_FUNCTIE;}
+
 "intoarce" {return RETURN;}
 
  /*user defined data types (similar to classes in object orientated languages, but with your ownsyntax); provide specific syntax for working with these types*/
 
 _[a-zA-Z][_a-zA-Z0-9]* {return NUME_STRUCT;}
-"un struct " {return TIP_STRUCT;}
+"un struct " {return STRUCT;}
 "~>" {return REF;}
  
  /*array types ->> YACC*/
@@ -34,7 +32,7 @@ _[a-zA-Z][_a-zA-Z0-9]* {return NUME_STRUCT;}
  /*arithmetic and boolean expressions with complex operands*/
 
 -?([1-9][0-9]*|0)(\.[0-9]+)? {return NR;}
-"adivarat"|"fals" {return BOOL;} 
+("adivarat"|"fals") {return BOOL;} 
 
 "=?" {return ASSIGN;}
 
@@ -58,9 +56,13 @@ _[a-zA-Z][_a-zA-Z0-9]* {return NUME_STRUCT;}
 
 "????" {return PRINT;}
 
-\/\/\?.+ {return COMMENT;}
-"aa..." {return BEGIN;}
+\/\/\?.+/\n {return COMMENT;}
+"aa..." {return BGIN;}
 "...da" {return END;}
+
+
+[A-Z]+ {return CID;}
+[a-zA-Z][_a-zA-Z0-9]* {return ID;}
 
 [ \t] ;
 \n {yylineno++;}

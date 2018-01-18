@@ -46,20 +46,72 @@ extern int yydebug;
   enum yytokentype
   {
     ID = 258,
-    TIP = 259,
-    BEGIN = 260,
-    END = 261,
-    ASSIGN = 262,
-    NR = 263
+    CID = 259,
+    TIP_VAR = 260,
+    TIP_CONST = 261,
+    TIP_FUNCTIE = 262,
+    TIP_VAR_BOOL = 263,
+    TIP_VAR_STRING = 264,
+    TIP_CONST_BOOL = 265,
+    TIP_CONST_STRING = 266,
+    RETURN = 267,
+    NUME_STRUCT = 268,
+    STRUCT = 269,
+    REF = 270,
+    IF = 271,
+    WHILE = 272,
+    FOR = 273,
+    NR = 274,
+    BOOL = 275,
+    ASSIGN = 276,
+    AND = 277,
+    OR = 278,
+    NOT = 279,
+    INC = 280,
+    DEC = 281,
+    COMP = 282,
+    STRING = 283,
+    PRINT = 284,
+    COMMENT = 285,
+    BGIN = 286,
+    END = 287,
+    NO_ELSE = 288,
+    ELSE = 289
   };
 #endif
 /* Tokens.  */
 #define ID 258
-#define TIP 259
-#define BEGIN 260
-#define END 261
-#define ASSIGN 262
-#define NR 263
+#define CID 259
+#define TIP_VAR 260
+#define TIP_CONST 261
+#define TIP_FUNCTIE 262
+#define TIP_VAR_BOOL 263
+#define TIP_VAR_STRING 264
+#define TIP_CONST_BOOL 265
+#define TIP_CONST_STRING 266
+#define RETURN 267
+#define NUME_STRUCT 268
+#define STRUCT 269
+#define REF 270
+#define IF 271
+#define WHILE 272
+#define FOR 273
+#define NR 274
+#define BOOL 275
+#define ASSIGN 276
+#define AND 277
+#define OR 278
+#define NOT 279
+#define INC 280
+#define DEC 281
+#define COMP 282
+#define STRING 283
+#define PRINT 284
+#define COMMENT 285
+#define BGIN 286
+#define END 287
+#define NO_ELSE 288
+#define ELSE 289
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
